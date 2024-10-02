@@ -26,11 +26,12 @@
 
 .Main-Body {
   background-color: #ead465;
-  height: 550px;
+  height: auto;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
+  align-self: center;
   justify-content: center;
+  margin: auto;
 }
 
 .App-link {

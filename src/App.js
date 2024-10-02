@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { database } from './firebase';
 import { ref, onValue } from 'firebase/database';
 import GraficoLinha from "./components/GraficoLinha";
+import { saveAs } from 'file-saver';
 
 function App() {
 	const dataRef = ref(database, 'bee_data');
@@ -19,46 +20,23 @@ function App() {
 	const [startTime, setStartTime] = useState('');
 	const [endTime, setEndTime] = useState('');
 
-	const [dados, setDados] = useState({
-		labels: timestamps,
-		datasets: [
-			{
-				label: "Sensacao termica API (°C)",
-				data: sensacaoTermicaApi,
-				borderWidth: 2,
-			},
-			{
-				label: "Temperatura API (°C)",
-				data: temperaturaApi,
-				borderWidth: 2,
-			},
-			{
-				label: "Umidade API (%)",
-				data: umidadeApi,
-				borderWidth: 2,
-			},
-			{
-				label: "Pressao API (hPa)",
-				data: pressaoApi,
-				borderWidth: 2,
-			},
-			{
-				label: "Temperatura Rsp (°C)",
-				data: temperaturaRsp,
-				borderWidth: 2,
-			},
-			{
-				label: "Umidade Rsp (%)",
-				data: umidadeRsp,
-				borderWidth: 2,
-			},
-			{
-				label: "Pressao Rsp (hPa)",
-				data: pressaoRsp,
-				borderWidth: 2,
-			},
-		],
-	});
+	const exportCSV = (dados, filename) => {
+        const csvRows = [];
+        const headers = ["Timestamp", ...dados.datasets.map(dataset => dataset.label)];
+        csvRows.push(headers.join(','));
+
+        dados.labels.forEach((label, i) => {
+            const row = [label];
+            dados.datasets.forEach(dataset => {
+                row.push(dataset.data[i]);
+            });
+            csvRows.push(row.join(','));
+        });
+
+        const csvString = csvRows.join('\n');
+        const blob = new Blob([csvString], { type: 'text/csv' });
+        saveAs(blob, filename);
+    };
 
 	const formatTimestamp = (timestamp) => {
 		const [date, time] = timestamp.split('-');
@@ -131,55 +109,145 @@ function App() {
 				});
 	
 
-				setDados({
-					labels: newTimestamps,
-					datasets: [
-						{
-							label: "Proximidade Placa",
-							data: newProximidadeRsp,
-							borderWidth: 2,
-						},
-						{
-							label: "Temperatura Placa (°C)",
-							data: newTemperaturaRsp,
-							borderWidth: 2,
-						},
-						{
-							label: "Umidade Placa (%)",
-							data: newUmidadeRsp,
-							borderWidth: 2,
-						},
-						{
-							label: "Pressão Placa (hPa)",
-							data: newPressaoRsp,
-							borderWidth: 2,
-						},
-						{
-							label: "Sensacao térmica Openw (°C)",
-							data: newSensacaoTermicaApi,
-							borderWidth: 2,
-						},
-						{
-							label: "Temperatura OpenW (°C)",
-							data: newTemperaturaApi,
-							borderWidth: 2,
-						},
-						{
-							label: "Umidade OpenW (%)",
-							data: newUmidadeApi,
-							borderWidth: 2,
-						},
-						{
-							label: "Pressão OpenW (hPa)",
-							data: newPressaoApi,
-							borderWidth: 2,
-						},
-					],
-				});
+				setProximidade({
+                    labels: newTimestamps,
+                    datasets: [
+                        {
+                            label: "Proximidade Placa",
+                            data: newProximidadeRsp,
+                            borderWidth: 2,
+                        },
+                    ],
+                });
+
+                setSensacaoTermicaDados({
+                    labels: newTimestamps,
+                    datasets: [
+                        {
+                            label: "Sensacao térmica Openw (°C)",
+                            data: newSensacaoTermicaApi,
+                            borderWidth: 2,
+                        },
+                    ],
+                });
+
+                setTemperaturaDados({
+                    labels: newTimestamps,
+                    datasets: [
+                        {
+                            label: "Temperatura OpenW (°C)",
+                            data: newTemperaturaApi,
+                            borderWidth: 2,
+                        },
+                        {
+                            label: "Temperatura Placa (°C)",
+                            data: newTemperaturaRsp,
+                            borderWidth: 2,
+                        },
+                    ],
+                });
+
+                setUmidadeDados({
+                    labels: newTimestamps,
+                    datasets: [
+                        {
+                            label: "Umidade OpenW (%)",
+                            data: newUmidadeApi,
+                            borderWidth: 2,
+                        },
+                        {
+                            label: "Umidade Placa (%)",
+                            data: newUmidadeRsp,
+                            borderWidth: 2,
+                        },
+                    ],
+                });
+
+                setPressaoDados({
+                    labels: newTimestamps,
+                    datasets: [
+                        {
+                            label: "Pressão OpenW (hPa)",
+                            data: newPressaoApi,
+                            borderWidth: 2,
+                        },
+                        {
+                            label: "Pressão Placa (hPa)",
+                            data: newPressaoRsp,
+                            borderWidth: 2,
+                        },
+                    ],
+                });
 			});
 		};
 		fetchData();
 	}, [startTime, endTime]);
+
+	const [proximidadeDados, setProximidade] = useState({
+		labels: [],
+		datasets: [
+			{
+				label: "Proximidade Placa",
+				data: proximidadeRsp,
+				borderWidth: 2,
+			},
+		],
+	});
+	const [sensacaoTermicaDados, setSensacaoTermicaDados] = useState({
+		labels: [],
+		datasets: [
+			{
+				label: "Sensacao termica API (°C)",
+				data: sensacaoTermicaApi,
+				borderWidth: 2,
+			},
+		],
+	});
+    const [temperaturaDados, setTemperaturaDados] = useState({
+		labels: [],
+		datasets: [
+			{
+				label: "Temperatura API (°C)",
+				data: temperaturaApi,
+				borderWidth: 2,
+			},
+			{
+				label: "Temperatura Rsp (°C)",
+				data: temperaturaRsp,
+				borderWidth: 2,
+			},
+		],
+	});
+    const [umidadeDados, setUmidadeDados] = useState({
+		labels: [],
+		datasets: [
+			{
+				label: "Umidade API (%)",
+				data: umidadeApi,
+				borderWidth: 2,
+			},
+			{
+				label: "Umidade Rsp (%)",
+				data: umidadeRsp,
+				borderWidth: 2,
+			},
+		],
+	});
+    const [pressaoDados, setPressaoDados] = useState({
+		labels: [],
+		datasets: [
+			{
+				label: "Pressao API (hPa)",
+				data: pressaoApi,
+				borderWidth: 2,
+			},
+			{
+				label: "Pressao Rsp (hPa)",
+				data: pressaoRsp,
+				borderWidth: 2,
+			},
+		],
+	});
 
 	return (
 		<div className="App">
@@ -188,18 +256,32 @@ function App() {
 				<h3 style={{ marginTop: 0 }}>Dashboard de Dados do Firebase</h3>
 			</header>
 			<main className='Main-Body'>
-				<div style={{ width: 850, backgroundColor: 'white' }}>
-					<h3>Selecione na legenda quais informações gostaria de ver</h3>
-					<GraficoLinha dadosGrafico={dados} />
-				</div>
-				<div>
-					<label>Timestamp Inicial: </label>
-					<input type="datetime-local" onChange={(e) => setStartTime(e.target.value)} />
-					<label style={{ marginLeft: 30 }}>Timestamp Final: </label>
-					<input type="datetime-local" onChange={(e) => setEndTime(e.target.value)} />
-				</div>
-				<p style={{ fontSize: 10 }}>*OBS: Utilize o scroll do mouse para dar zoom no gráfico e arraste lateralmente clicando</p>
-			</main>
+			<div style={{ width: 850, backgroundColor: 'white', borderStyle: 'solid' }}>
+				<h3>Proximidade Placa </h3>
+				<GraficoLinha dadosGrafico={proximidadeDados} />
+				<button onClick={() => exportCSV(proximidadeDados, "proximidade.csv")}>Exportar CSV</button>
+			</div>
+			<div style={{ width: 850, backgroundColor: 'white', borderStyle: 'solid' }}>
+				<h3>Sensação térmica (°C)</h3>
+				<GraficoLinha dadosGrafico={sensacaoTermicaDados} />
+				<button onClick={() => exportCSV(sensacaoTermicaDados, "sensacao_termica.csv")}>Exportar CSV</button>
+			</div>
+			<div style={{ width: 850, backgroundColor: 'white', borderStyle: 'solid'}}>
+				<h3>Temperatura (°C)</h3>
+				<GraficoLinha dadosGrafico={temperaturaDados} />
+				<button onClick={() => exportCSV(temperaturaDados, "temperatura.csv")}>Exportar CSV</button>
+			</div>
+			<div style={{ width: 850, backgroundColor: 'white', borderStyle: 'solid' }}>
+				<h3>Umidade (%)</h3>
+				<GraficoLinha dadosGrafico={umidadeDados} />
+				<button onClick={() => exportCSV(umidadeDados, "umidade.csv")}>Exportar CSV</button>
+			</div>
+			<div style={{ width: 850, backgroundColor: 'white', borderStyle: 'solid' }}>
+				<h3>Pressão (hPa)</h3>
+				<GraficoLinha dadosGrafico={pressaoDados} />
+				<button onClick={() => exportCSV(pressaoDados, "pressao.csv")}>Exportar CSV</button>
+			</div>
+            </main>
 			<footer>
 				<p>&copy; 2024 Universidade Estadual de Campinas.</p>
 			</footer>

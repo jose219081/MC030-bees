@@ -2,7 +2,6 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getDatabase, onValue, ref, set } from "firebase/database";
-import { getAuth } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -23,7 +22,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const database = getDatabase(app);
-const auth = getAuth(app);
 function writeUsrData(day){
   const reference = ref(database, 'bee_data/' + day);
   set(reference, {
@@ -53,4 +51,4 @@ function writeUsrData(day){
 writeUsrData("08_07_2024-23_37_23");
 writeUsrData("09_07_2024-23_37_23");
 writeUsrData("10_07_2024-23_37_23");
-export { analytics, database, auth };
+export { analytics, database};
