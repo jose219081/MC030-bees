@@ -256,7 +256,7 @@ function App() {
 				<h3 style={{ marginTop: 0 }}>Dashboard de Dados do Firebase</h3>
 			</header>
 			<main className='Main-Body'>
-			<div style={{ width: 850, backgroundColor: 'white', borderStyle: 'solid' }}>
+			<div style={{ width: "40%", backgroundColor: 'white', borderStyle: 'solid' }}>
 				<h3>Proximidade Placa </h3>
 				<GraficoLinha dadosGrafico={proximidadeDados} />
 				<button onClick={() => exportCSV(proximidadeDados, "proximidade.csv")}>Exportar CSV</button>
@@ -268,7 +268,7 @@ function App() {
 				</div>
 				<p style={{ fontSize: 10 }}>*OBS: Utilize o scroll do mouse para dar zoom no gráfico e arraste lateralmente clicando</p>
 			</div>
-			<div style={{ width: 850, backgroundColor: 'white', borderStyle: 'solid' }}>
+			<div style={{ width: "40%", backgroundColor: 'white', borderStyle: 'solid' }}>
 				<h3>Sensação térmica (°C)</h3>
 				<GraficoLinha dadosGrafico={sensacaoTermicaDados} />
 				<button onClick={() => exportCSV(sensacaoTermicaDados, "sensacao_termica.csv")}>Exportar CSV</button>
@@ -280,7 +280,7 @@ function App() {
 				</div>
 				<p style={{ fontSize: 10 }}>*OBS: Utilize o scroll do mouse para dar zoom no gráfico e arraste lateralmente clicando</p>
 			</div>
-			<div style={{ width: 850, backgroundColor: 'white', borderStyle: 'solid'}}>
+			<div style={{ width: "40%", backgroundColor: 'white', borderStyle: 'solid'}}>
 				<h3>Temperatura (°C)</h3>
 				<GraficoLinha dadosGrafico={temperaturaDados} />
 				<button onClick={() => exportCSV(temperaturaDados, "temperatura.csv")}>Exportar CSV</button>
@@ -292,7 +292,7 @@ function App() {
 				</div>
 				<p style={{ fontSize: 10 }}>*OBS: Utilize o scroll do mouse para dar zoom no gráfico e arraste lateralmente clicando</p>
 			</div>
-			<div style={{ width: 850, backgroundColor: 'white', borderStyle: 'solid' }}>
+			<div style={{ width: "40%", backgroundColor: 'white', borderStyle: 'solid' }}>
 				<h3>Umidade (%)</h3>
 				<GraficoLinha dadosGrafico={umidadeDados} />
 				<button onClick={() => exportCSV(umidadeDados, "umidade.csv")}>Exportar CSV</button>
@@ -304,7 +304,7 @@ function App() {
 				</div>
 				<p style={{ fontSize: 10 }}>*OBS: Utilize o scroll do mouse para dar zoom no gráfico e arraste lateralmente clicando</p>
 			</div>
-			<div style={{ width: 850, backgroundColor: 'white', borderStyle: 'solid' }}>
+			<div style={{ width: "40%", backgroundColor: 'white', borderStyle: 'solid' }}>
 				<h3>Pressão (hPa)</h3>
 				<GraficoLinha dadosGrafico={pressaoDados} />
 				<button onClick={() => exportCSV(pressaoDados, "pressao.csv")}>Exportar CSV</button>

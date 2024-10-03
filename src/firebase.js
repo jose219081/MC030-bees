@@ -27,28 +27,35 @@ function writeUsrData(day){
   set(reference, {
     openweathermap: {
       main: {
-        feelslike: 290.31,
-        grnd_level: 950,
-        humidity: 88,
-        pressure: 1025,
-        sea_level: 1025,
-        temp: 290.25,
-        temp_max: 291.07,
-        temp_min: 288.91
+        feels_like: Math.random()*(300-270)+270,
+        grnd_level: Math.random()*(1100-900)+900,
+        humidity: Math.random()*(100-50)+50,
+        pressure: Math.random()*(1100-900)+900,
+        sea_level: Math.random()*(1100-900)+900,
+        temp: Math.random()*(300-270)+270,
+        temp_max: Math.random()*(300-270)+270,
+        temp_min: Math.random()*(300-270)+270
       },
     },
     sensor: {
       gas_interno: 149844,
       id_placa: 1,
-      pressao_interna: 955.074,
-      proximidade: 3602,
-      temperatura_interna: 23.95481,
-      umidade_interna: 66.62566
+      pressao_interna: Math.random()*(1100-900)+900,
+      proximidade: Math.random()*(300),
+      temperatura_interna: Math.random()*(36-0),
+      umidade_interna: Math.random()*(100-50)+50
     }
   });
 }
 
-writeUsrData("08_07_2024-23_37_23");
-writeUsrData("09_07_2024-23_37_23");
-writeUsrData("10_07_2024-23_37_23");
+for(let i = 0; i < 60; i++){
+  if(i < 10){
+    var dia = "08_07_2024-23_0"+i+"_23";
+  }else{
+    var dia = "08_07_2024-23_"+i+"_23";
+  }
+  
+  writeUsrData(dia);
+}
+
 export { analytics, database};

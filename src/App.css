@@ -32,6 +32,8 @@
   align-self: center;
   justify-content: center;
   margin: auto;
+  column-gap: 2vw;
+  row-gap: 2vw;
 }
 
 .App-link {
