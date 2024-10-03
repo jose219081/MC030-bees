@@ -260,26 +260,61 @@ function App() {
 				<h3>Proximidade Placa </h3>
 				<GraficoLinha dadosGrafico={proximidadeDados} />
 				<button onClick={() => exportCSV(proximidadeDados, "proximidade.csv")}>Exportar CSV</button>
+				<div>
+					<label>Timestamp Inicial: </label>
+					<input type="datetime-local" onChange={(e) => setStartTime(e.target.value)} />
+					<label style={{ marginLeft: 30 }}>Timestamp Final: </label>
+					<input type="datetime-local" onChange={(e) => setEndTime(e.target.value)} />
+				</div>
+				<p style={{ fontSize: 10 }}>*OBS: Utilize o scroll do mouse para dar zoom no gráfico e arraste lateralmente clicando</p>
 			</div>
 			<div style={{ width: 850, backgroundColor: 'white', borderStyle: 'solid' }}>
 				<h3>Sensação térmica (°C)</h3>
 				<GraficoLinha dadosGrafico={sensacaoTermicaDados} />
 				<button onClick={() => exportCSV(sensacaoTermicaDados, "sensacao_termica.csv")}>Exportar CSV</button>
+				<div>
+					<label>Timestamp Inicial: </label>
+					<input type="datetime-local" onChange={(e) => setStartTime(e.target.value)} />
+					<label style={{ marginLeft: 30 }}>Timestamp Final: </label>
+					<input type="datetime-local" onChange={(e) => setEndTime(e.target.value)} />
+				</div>
+				<p style={{ fontSize: 10 }}>*OBS: Utilize o scroll do mouse para dar zoom no gráfico e arraste lateralmente clicando</p>
 			</div>
 			<div style={{ width: 850, backgroundColor: 'white', borderStyle: 'solid'}}>
 				<h3>Temperatura (°C)</h3>
 				<GraficoLinha dadosGrafico={temperaturaDados} />
 				<button onClick={() => exportCSV(temperaturaDados, "temperatura.csv")}>Exportar CSV</button>
+				<div>
+					<label>Timestamp Inicial: </label>
+					<input type="datetime-local" onChange={(e) => setStartTime(e.target.value)} />
+					<label style={{ marginLeft: 30 }}>Timestamp Final: </label>
+					<input type="datetime-local" onChange={(e) => setEndTime(e.target.value)} />
+				</div>
+				<p style={{ fontSize: 10 }}>*OBS: Utilize o scroll do mouse para dar zoom no gráfico e arraste lateralmente clicando</p>
 			</div>
 			<div style={{ width: 850, backgroundColor: 'white', borderStyle: 'solid' }}>
 				<h3>Umidade (%)</h3>
 				<GraficoLinha dadosGrafico={umidadeDados} />
 				<button onClick={() => exportCSV(umidadeDados, "umidade.csv")}>Exportar CSV</button>
+				<div>
+					<label>Timestamp Inicial: </label>
+					<input type="datetime-local" onChange={(e) => setStartTime(e.target.value)} />
+					<label style={{ marginLeft: 30 }}>Timestamp Final: </label>
+					<input type="datetime-local" onChange={(e) => setEndTime(e.target.value)} />
+				</div>
+				<p style={{ fontSize: 10 }}>*OBS: Utilize o scroll do mouse para dar zoom no gráfico e arraste lateralmente clicando</p>
 			</div>
 			<div style={{ width: 850, backgroundColor: 'white', borderStyle: 'solid' }}>
 				<h3>Pressão (hPa)</h3>
 				<GraficoLinha dadosGrafico={pressaoDados} />
 				<button onClick={() => exportCSV(pressaoDados, "pressao.csv")}>Exportar CSV</button>
+				<div>
+					<label>Timestamp Inicial: </label>
+					<input type="datetime-local" onChange={(e) => setStartTime(e.target.value)} />
+					<label style={{ marginLeft: 30 }}>Timestamp Final: </label>
+					<input type="datetime-local" onChange={(e) => setEndTime(e.target.value)} />
+				</div>
+				<p style={{ fontSize: 10 }}>*OBS: Utilize o scroll do mouse para dar zoom no gráfico e arraste lateralmente clicando</p>
 			</div>
             </main>
 			<footer>
