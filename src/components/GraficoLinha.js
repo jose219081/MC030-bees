@@ -41,12 +41,13 @@ function GraficoLinha({ dadosGrafico }) {
     scales: {
       x: {
         ticks: {
+          autoSkip: false,
           maxRotation: 0,
           align: "middle", 
           callback: function(value, index) {
             const labelsLength = this.chart.data.labels.length;
             // Show label only for the first and last ticks
-            if (index === 0 || index === labelsLength - 1) {
+            if (index === 0 || index === labelsLength-1) {
               return this.getLabelForValue(value);
             }
             return "";
