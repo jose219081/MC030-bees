@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: #f8f9fa;
 }
 
 .App-logo {
@@ -14,35 +15,146 @@
 }
 
 .App-header {
-  background-color: #d6b408;
+  background-color: #007bff;
   max-height: 50vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(2px + 2vmin);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700; /* Make sure to match the imported weights */
   color: black;
+  border-radius: 10px;
+  margin: 10px 20px 0px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .Main-Body {
-  background-color: #ead465;
-  height: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Create two equal columns */
+  gap: 20px; /* Space between columns */
+  padding: 20px;
+}
+
+#btns .button-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Creates 3 equal columns */
+  gap: 10px; /* Adds space between the buttons */
+}
+
+#btns {
   display: flex;
-  flex-wrap: wrap;
-  align-self: center;
-  justify-content: center;
-  margin: auto;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 20px;
+  background-color: white; /* Add background color to button container */
+  border: 2px solid #ccc; /* Add border */
+  border-radius: 8px;
 }
 
-.App-link {
-  color: #61dafb;
+#btns h2 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700; /* Make sure to match the imported weights */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+#btns button {
+  padding: 10px 20px; /* Padding for buttons */
+  font-size: 16px; /* Font size */
+  cursor: pointer; /* Pointer on hover */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #007bff; /* Primary button color */
+  color: white; /* Text color */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+}
+
+#btns button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  transform: scale(1.05); /* Slightly grow button on hover */
+}
+
+#btns button:active {
+  transform: scale(0.95); /* Slightly shrink button on click */
+}
+
+.chart-container {
+  background-color: white; /* Background for chart container */
+  border: 2px solid #ccc; /* Border for chart container */
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center the chart vertically */
+  border-radius: 8px;
+}
+
+/* Ensure charts are responsive */
+.chart-container h3 {
+  margin: 0 0 10px 0; /* Adjust margin for titles */
+}
+
+@media (max-width: 768px) {
+  .Main-Body {
+    grid-template-columns: 1fr; /* Stack columns on smaller screens */
   }
-  to {
-    transform: rotate(360deg);
-  }
+}
+
+.grafico-buttons {
+  display: flex;
+  gap: 20px; /* Space between buttons */
+  margin-top: 20px; /* Space above the button container */
+  justify-content: center; /* Center the buttons */
+}
+
+.grafico-buttons button {
+  padding: 10px 20px; /* Padding for buttons */
+  font-size: 16px; /* Font size */
+  cursor: pointer; /* Pointer on hover */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #007bff; /* Primary button color */
+  color: white; /* Text color */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+}
+
+.grafico-buttons button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  transform: scale(1.05); /* Slightly grow button on hover */
+}
+
+.grafico-buttons button:active {
+  transform: scale(0.95); /* Slightly shrink button on click */
+}
+
+.grafico-buttons label {
+  font-weight: bold; /* Bold labels */
+  margin-right: 10px; /* Space between label and input */
+}
+
+.date-inputs {
+  display: flex;
+  align-items: center; /* Center vertically */
+  margin-top: 20px; /* Space above the date inputs */
+}
+
+.date-inputs label {
+  margin-right: 10px; /* Space between label and input */
+  font-size: 16px; /* Font size for labels */
+}
+
+.date-inputs input {
+  padding: 10px; /* Padding for inputs */
+  font-size: 16px; /* Font size for inputs */
+  border: 1px solid #007bff; /* Border color */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #f8f9fa; /* Light background */
+  transition: border-color 0.3s, background-color 0.3s; /* Smooth transition */
+}
+
+.date-inputs input:focus {
+  border-color: #0056b3; /* Darker border on focus */
+  background-color: #e9ecef; /* Slightly darker background on focus */
+  outline: none; /* Remove default outline */
 }
