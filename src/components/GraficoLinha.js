@@ -1,29 +1,42 @@
 import React, { useCallback, useRef } from "react";
 import { Line } from "react-chartjs-2";
-import { Chart as ChartJS } from "chart.js/auto";
+import {
+  Chart as ChartJS,
+  LineElement,
+  LinearScale,
+  CategoryScale,
+  PointElement,
+} from "chart.js/auto";
 import zoomPlugin from "chartjs-plugin-zoom";
+import { saveAs } from "file-saver";
 
-ChartJS.register(zoomPlugin);
+ChartJS.register(
+  zoomPlugin,
+  LineElement,
+  LinearScale,
+  CategoryScale,
+  PointElement
+);
 
-function GraficoLinha({ dadosGrafico }) {
+function GraficoLinha(props) {
   const graficoRef = useRef(null);
   const options = {
     plugins: {
       zoom: {
         pan: {
-          enabled: true, // Habilita o panning
-          mode: 'xy', // Permite panning apenas no eixo X
+          enabled: true, // Enable panning
+          mode: "xy", // Allow panning in both axes
         },
         zoom: {
           wheel: {
-            enabled: true, // Ativa zoom com a roda do mouse
-            mode: 'y',
+            enabled: true, // Enable zoom with mouse wheel
+            mode: "y",
           },
           pinch: {
-            enabled: false, // Desativa zoom com gesto de pinça
+            enabled: false, // Disable pinch zoom
           },
           drag: {
-            enabled: false, // Desativa zoom ao arrastar
+            enabled: false, // Disable drag zoom
           },
           limits: {
             x: {
@@ -43,11 +56,11 @@ function GraficoLinha({ dadosGrafico }) {
         ticks: {
           autoSkip: false,
           maxRotation: 0,
-          align: "middle", 
-          callback: function(value, index) {
+          align: "middle",
+          callback: function (value, index) {
             const labelsLength = this.chart.data.labels.length;
             // Show label only for the first and last ticks
-            if (index === 0 || index === labelsLength-1) {
+            if (index === 0 || index === labelsLength - 1) {
               return this.getLabelForValue(value);
             }
             return "";
@@ -55,9 +68,30 @@ function GraficoLinha({ dadosGrafico }) {
         },
       },
       y: {
-        beginAtZero: false, // Inicia o eixo Y do zero, ajuste conforme necessário
+        beginAtZero: false, // Start the Y axis at zero
       },
     },
+  };
+
+  const exportCSV = (dados, filename) => {
+    const csvRows = [];
+    const headers = [
+      "Timestamp",
+      ...dados.datasets.map((dataset) => dataset.label),
+    ];
+    csvRows.push(headers.join(","));
+
+    dados.labels.forEach((label, i) => {
+      const row = [label];
+      dados.datasets.forEach((dataset) => {
+        row.push(dataset.data[i]);
+      });
+      csvRows.push(row.join(","));
+    });
+
+    const csvString = csvRows.join("\n");
+    const blob = new Blob([csvString], { type: "text/csv" });
+    saveAs(blob, filename);
   };
 
   const ResetZoom = useCallback(() => {
@@ -65,10 +99,35 @@ function GraficoLinha({ dadosGrafico }) {
   }, [graficoRef]);
 
   return (
-  <>
-    <Line ref={graficoRef} data={dadosGrafico} options={options}/>
-    <button onClick={ResetZoom}>Reset Zoom</button>
-  </>  
+    <>
+      <Line ref={graficoRef} data={props.dadosGrafico} options={options} />
+      <div className="grafico-buttons">
+        <button onClick={ResetZoom}>Reset Zoom</button>
+        <button
+          onClick={() => exportCSV(props.dadosGrafico, "dados_grafico.csv")}
+        >
+          Exportar CSV
+        </button>
+      </div>
+      <div className="date-inputs">
+        <label>Timestamp Inicial: </label>
+        <input
+          type="datetime-local"
+          value={props.startTime}
+          onChange={(e) => props.setStartTime(e.target.value)}
+        />
+        <label style={{ marginLeft: 30 }}>Timestamp Final: </label>
+        <input
+          type="datetime-local"
+          value={props.endTime}
+          onChange={(e) => props.setEndTime(e.target.value)}
+        />
+      </div>
+      <p style={{ fontSize: 10 }}>
+        *OBS: Utilize o scroll do mouse para dar zoom no gráfico e arraste
+        lateralmente clicando
+      </p>
+    </>
   );
 }
 
