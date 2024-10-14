@@ -328,6 +328,20 @@ function App() {
             </button>
           </div>
           <h2>Adicionar mais alguma coisa para controlar o dashboard aqui: </h2>
+          <div className="date-inputs">
+            <label>Timestamp Inicial: </label>
+            <input
+              type="datetime-local"
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+            />
+            <label style={{ marginLeft: 30 }}>Timestamp Final: </label>
+            <input
+              type="datetime-local"
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
+            />
+          </div>
         </div>
 
         {!showAll && (
@@ -335,8 +349,6 @@ function App() {
             <h3>{graphTitle}</h3>
             <GraficoLinha
               dadosGrafico={dados}
-              setStartTime={setStartTime}
-              setEndTime={setEndTime}
             />
           </div>
         )}
@@ -347,40 +359,30 @@ function App() {
               <h3> Dados do Sensor de Proximidade </h3>
               <GraficoLinha
                 dadosGrafico={proximidadeDados}
-                setStartTime={setStartTime}
-                setEndTime={setEndTime}
               />
             </div>
             <div className="chart-container">
               <h3> Dados de Pressão (hPa) </h3>
               <GraficoLinha
                 dadosGrafico={pressaoDados}
-                setStartTime={setStartTime}
-                setEndTime={setEndTime}
               />
             </div>
             <div className="chart-container">
               <h3> Dados de Umidade (%) </h3>
               <GraficoLinha
                 dadosGrafico={umidadeDados}
-                setStartTime={setStartTime}
-                setEndTime={setEndTime}
               />
             </div>
             <div className="chart-container">
               <h3> Dados de Temperatura (°C) </h3>
               <GraficoLinha
                 dadosGrafico={temperaturaDados}
-                setStartTime={setStartTime}
-                setEndTime={setEndTime}
               />
             </div>
             <div className="chart-container">
               <h3> Dados de Sensação Térmica (°C) </h3>
               <GraficoLinha
                 dadosGrafico={sensacaoTermicaDados}
-                setStartTime={setStartTime}
-                setEndTime={setEndTime}
               />
             </div>
           </>

@@ -109,20 +109,6 @@ function GraficoLinha(props) {
           Exportar CSV
         </button>
       </div>
-      <div className="date-inputs">
-        <label>Timestamp Inicial: </label>
-        <input
-          type="datetime-local"
-          value={props.startTime}
-          onChange={(e) => props.setStartTime(e.target.value)}
-        />
-        <label style={{ marginLeft: 30 }}>Timestamp Final: </label>
-        <input
-          type="datetime-local"
-          value={props.endTime}
-          onChange={(e) => props.setEndTime(e.target.value)}
-        />
-      </div>
       <p style={{ fontSize: 10 }}>
         *OBS: Utilize o scroll do mouse para dar zoom no gráfico e arraste
         lateralmente clicando

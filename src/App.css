@@ -49,6 +49,7 @@
   align-items: flex-start;
   gap: 10px;
   padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   background-color: white; /* Add background color to button container */
   border: 2px solid #ccc; /* Add border */
   border-radius: 8px;
@@ -142,6 +143,8 @@
 .date-inputs label {
   margin-right: 10px; /* Space between label and input */
   font-size: 16px; /* Font size for labels */
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700; /* Make sure to match the imported weights */
 }
 
 .date-inputs input {
