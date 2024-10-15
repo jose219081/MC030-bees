@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { database } from "./firebase";
 import { ref, onValue } from "firebase/database";
 import GraficoLinha from "./components/GraficoLinha";
+import GraficoColuna from "./components/GraficoColuna";
 
 function App() {
   const dataRef = ref(database, "bee_data");
@@ -10,6 +11,7 @@ function App() {
   const temperaturaApi = [];
   const umidadeApi = [];
   const pressaoApi = [];
+  const poluicaoApi = [];
   const proximidadeRsp = [];
   const temperaturaRsp = [];
   const umidadeRsp = [];
@@ -31,6 +33,16 @@ function App() {
       {
         label: "Sensacao termica API (°C)",
         data: sensacaoTermicaApi,
+        borderWidth: 2,
+      },
+    ],
+  });
+  const [poluicaoDados, setPoluicaoDados] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: "Poluicao Api",
+        data: poluicaoApi,
         borderWidth: 2,
       },
     ],
@@ -129,6 +141,7 @@ function App() {
               temperaturaApi: values[key].openweathermap.main.temp - 273,
               umidadeApi: values[key].openweathermap.main.humidity,
               pressaoApi: values[key].openweathermap.main.grnd_level,
+              poluicaoApi: values[key].pollution.list.main.aqi,
               proximidadeRsp: values[key].sensor.proximidade,
               temperaturaRsp: values[key].sensor.temperatura_interna,
               umidadeRsp: values[key].sensor.umidade_interna,
@@ -149,6 +162,7 @@ function App() {
         const newTemperaturaApi = [];
         const newUmidadeApi = [];
         const newPressaoApi = [];
+        const newPoluicaoApi = [];
         const newProximidadeRsp = [];
         const newTemperaturaRsp = [];
         const newUmidadeRsp = [];
@@ -160,6 +174,7 @@ function App() {
           newTemperaturaApi.push(data.temperaturaApi);
           newUmidadeApi.push(data.umidadeApi);
           newPressaoApi.push(data.pressaoApi);
+          newPoluicaoApi.push(data.poluicaoApi);
           newProximidadeRsp.push(data.proximidadeRsp);
           newTemperaturaRsp.push(data.temperaturaRsp);
           newUmidadeRsp.push(data.umidadeRsp);
@@ -184,6 +199,18 @@ function App() {
             {
               label: "Sensacao térmica Openw (°C)",
               data: newSensacaoTermicaApi,
+              borderWidth: 2,
+              tension: 0.4,
+            },
+          ],
+        });
+
+        setPoluicaoDados({
+          labels: newTimestamps,
+          datasets: [
+            {
+              label: "Poluicao Openw",
+              data: newPoluicaoApi,
               borderWidth: 2,
               tension: 0.4,
             },
@@ -266,6 +293,10 @@ function App() {
         setDados(temperaturaDados);
         setGraphTitle(" Dados de Temperatura (°C) ");
         break;
+      case "poluicao":
+        setDados(poluicaoDados);
+        setGraphTitle(" Dados de Poluição do Ar ");
+        break;
       default:
         setDados(sensacaoTermicaDados);
         setGraphTitle(" Dados de Sensação Térmica (°C) ");
@@ -277,6 +308,7 @@ function App() {
     pressaoDados,
     umidadeDados,
     temperaturaDados,
+    poluicaoDados,
     sensacaoTermicaDados,
   ]);
 
@@ -323,6 +355,11 @@ function App() {
             >
               Dados de Sensação Térmica
             </button>
+            <button
+              onClick={() => handleDataChange(poluicaoDados, "poluicao")}
+            >
+              Dados de Poluição do Ar
+            </button>
             <button onClick={() => setShowAll(!showAll)}>
               Mostrar Todos Dados
             </button>
@@ -344,10 +381,18 @@ function App() {
           </div>
         </div>
 
-        {!showAll && (
+        {!showAll && dados != poluicaoDados && (
           <div className="chart-container">
             <h3>{graphTitle}</h3>
             <GraficoLinha
+              dadosGrafico={dados}
+            />
+          </div>
+        )}
+        {!showAll && dados == poluicaoDados && (
+          <div className="chart-container">
+            <h3>{graphTitle}</h3>
+            <GraficoColuna
               dadosGrafico={dados}
             />
           </div>
@@ -383,6 +428,12 @@ function App() {
               <h3> Dados de Sensação Térmica (°C) </h3>
               <GraficoLinha
                 dadosGrafico={sensacaoTermicaDados}
+              />
+            </div>
+            <div className="chart-container">
+              <h3> Dados de Poluição do Ar </h3>
+              <GraficoColuna
+                dadosGrafico={poluicaoDados}
               />
             </div>
           </>

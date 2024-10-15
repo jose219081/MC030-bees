@@ -44,6 +44,13 @@ function writeUsrData(day){
       proximidade: Math.random()*(300),
       temperatura_interna: Math.random()*(36-0),
       umidade_interna: Math.random()*(100-50)+50
+    },
+    pollution: {
+      list: {
+        main:{ 
+          aqi: Math.floor(Math.random()*(6-1))+1
+        }
+      }
     }
   });
 }
