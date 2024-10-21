@@ -48,14 +48,5 @@ function writeUsrData(day){
   });
 }
 
-for(let i = 0; i < 60; i++){
-  if(i < 10){
-    var dia = "08_07_2024-23_0"+i+"_23";
-  }else{
-    var dia = "08_07_2024-23_"+i+"_23";
-  }
-  
-  writeUsrData(dia);
-}
 
 export { analytics, database};

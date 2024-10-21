@@ -327,7 +327,7 @@ function App() {
               Mostrar Todos Dados
             </button>
           </div>
-          <h2>Adicionar mais alguma coisa para controlar o dashboard aqui: </h2>
+          <h2>Insira a data do intervalo de dados que deseja observar: </h2>
           <div className="date-inputs">
             <label>Timestamp Inicial: </label>
             <input
