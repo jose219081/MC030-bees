@@ -54,6 +54,7 @@ function GraficoLinha(props) {
     scales: {
       x: {
         ticks: {
+          maxTicksLimit: 20,
           autoSkip: false,
           maxRotation: 0,
           align: "middle",
