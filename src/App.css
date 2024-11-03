@@ -208,3 +208,109 @@
   box-shadow: 0 0 5px #007bff;
   outline: none;
 }
+
+/* Modal Background */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure the modal is above other content */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: white; /* Modal background color */
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Soft shadow */
+  font-family: "Montserrat", sans-serif; /* Consistent font */
+}
+
+/* Modal Header */
+.modal-content h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #007bff; /* Primary color for header text */
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+/* Modal Text */
+.modal-content p {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Modal Buttons */
+.modal-content button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  margin: 0 5px;
+}
+
+/* Confirm Button */
+.modal-content button {
+  background-color: #007bff; /* Primary button color */
+  color: white;
+}
+
+.modal-content button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  transform: scale(1.05); /* Slightly grow button on hover */
+}
+
+.modal-content button:active {
+  transform: scale(0.95); /* Slightly shrink button on click */
+}
+
+.alert {
+  padding: 15px 20px; /* Increase padding for larger alert */
+  border-radius: 8px; /* Round corners */
+  color: white;
+  font-size: 1.2em; /* Increase font size */
+  position: fixed; /* Change to fixed for better positioning */
+  top: 20px;
+  right: 20px;
+  width: 400px; /* Set a fixed width for the alert */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Add shadow for better visibility */
+}
+
+.alert-success {
+  background-color: green;
+}
+
+.alert-error {
+  background-color: red;
+}
+
+.alert button {
+  background: none; /* Remove default background */
+  border: none; /* Remove default border */
+  border-radius: 50%; /* Make button circular */
+  width: 30px; /* Set width */
+  height: 30px; /* Set height */
+  color: white; /* Text color */
+  font-size: 1.2em; /* Increase font size */
+  cursor: pointer; /* Pointer cursor */
+  margin-left: 10px; /* Space between text and button */
+  line-height: 1; /* Align text vertically */
+}
+
+.alert button:hover {
+  background-color: rgba(255, 255, 255, 0.3); /* Hover effect */
+}
+
+
