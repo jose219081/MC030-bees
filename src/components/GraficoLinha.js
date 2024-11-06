@@ -54,6 +54,7 @@ function GraficoLinha(props) {
     scales: {
       x: {
         ticks: {
+          maxTicksLimit: 20,
           autoSkip: false,
           maxRotation: 0,
           align: "middle",
@@ -69,6 +70,8 @@ function GraficoLinha(props) {
       },
       y: {
         beginAtZero: false, // Start the Y axis at zero
+        suggestedMax: ((Math.max(...props.dadosGrafico.datasets[0].data) - Math.min(...props.dadosGrafico.datasets[0].data))) === 0 ?
+        Math.max(...props.dadosGrafico.datasets[0].data)*1.05 : (Math.max(...props.dadosGrafico.datasets[0].data) + (Math.max(...props.dadosGrafico.datasets[0].data) - Math.min(...props.dadosGrafico.datasets[0].data)) * 0.1), 
       },
     },
   };
