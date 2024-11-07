@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { database } from "../firebase";
 import { ref, onValue } from "firebase/database";
 import GraficoLinha from "../components/GraficoLinha";
+import GraficoColuna from "../components/GraficoColuna";
 
 function Home() {
   const [databaseName, setDatabaseName] = useState("bee_data");
@@ -15,6 +16,8 @@ function Home() {
   const temperaturaRsp = [];
   const umidadeRsp = [];
   const pressaoRsp = [];
+  const poluicaoAirQApi = [];
+  const poluicaoCompApi = [];
 
   const [proximidadeDados, setProximidade] = useState({
     labels: [],
@@ -34,6 +37,62 @@ function Home() {
         data: sensacaoTermicaApi,
         borderWidth: 2,
       },
+    ],
+  });
+  const [poluicaoAirQDados, setPoluicaoAirQDados] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: "Poluicao Api",
+        data: poluicaoAirQApi,
+        borderWidth: 2,
+      },
+    ],
+  });
+  const [poluicaoCompDados, setPoluicaoCompDados] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: "Poluicao Componentes CO Api",
+        data: poluicaoCompApi.co,
+        borderWidth: 2,
+      },
+      {
+        label: "Poluicao Componentes NO Api",
+        data: poluicaoCompApi.no,
+        borderWidth: 2,
+      },
+      {
+        label: "Poluicao Componentes NO2 Api",
+        data: poluicaoCompApi.no,
+        borderWidth: 2,
+      },
+      {
+        label: "Poluicao Componentes O3 Api",
+        data: poluicaoCompApi.co,
+        borderWidth: 2,
+      },
+      {
+        label: "Poluicao Componentes SO2 Api",
+        data: poluicaoCompApi.co,
+        borderWidth: 2,
+      },
+      {
+        label: "Poluicao Componentes PM2_5 Api",
+        data: poluicaoCompApi.co,
+        borderWidth: 2,
+      },
+      {
+        label: "Poluicao Componentes PM10 Api",
+        data: poluicaoCompApi.co,
+        borderWidth: 2,
+      },
+      {
+        label: "Poluicao Componentes NH3 Api",
+        data: poluicaoCompApi.co,
+        borderWidth: 2,
+      },
+      
     ],
   });
   const [temperaturaDados, setTemperaturaDados] = useState({
@@ -132,6 +191,7 @@ function Home() {
           (!startDate || dateTimestamp >= startDate) &&
           (!endDate || dateTimestamp <= endDate)
         ) {
+          console.log(values[key])
           dataArray.push({
             timestamp: formattedTimestamp,
             sensacaoTermicaApi:
@@ -143,6 +203,8 @@ function Home() {
             temperaturaRsp: values[key].sensor.temperatura_interna,
             umidadeRsp: values[key].sensor.umidade_interna,
             pressaoRsp: values[key].sensor.pressao_interna,
+            poluicaoAirQApi: values[key].pollution?.list[0].main?.aqi,
+            poluicaoCompAPI: values[key].pollution?.list[0].components,
           });
         }
       }
@@ -163,6 +225,8 @@ function Home() {
       const newTemperaturaRsp = [];
       const newUmidadeRsp = [];
       const newPressaoRsp = [];
+      const newPoluicaoAirQApi = [];
+      const newPoluicaoCompApi = [];
 
       dataArray.forEach((data) => {
         newTimestamps.push(data.timestamp);
@@ -174,6 +238,8 @@ function Home() {
         newTemperaturaRsp.push(data.temperaturaRsp);
         newUmidadeRsp.push(data.umidadeRsp);
         newPressaoRsp.push(data.pressaoRsp);
+        newPoluicaoAirQApi.push(data.poluicaoAirQApi);
+        newPoluicaoCompApi.push(data.poluicaoCompAPI);
       });
 
       setProximidade({
@@ -253,6 +319,64 @@ function Home() {
           },
         ],
       });
+
+      setPoluicaoAirQDados({
+        labels: newTimestamps,
+        datasets: [
+          {
+            label: "Poluicao do Ar Openw",
+            data: newPoluicaoAirQApi,
+            borderWidth: 2,
+          },
+        ],
+      });
+
+      setPoluicaoCompDados({
+        labels: newTimestamps,
+        datasets: [
+          {
+            label: "CO (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) => (obj.co)),
+            borderWidth: 2,
+          },
+          {
+            label: "NO (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) => (obj.no)),
+            borderWidth: 2,
+          },
+          {
+            label: "NO2 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) => (obj.no2)),
+            borderWidth: 2,
+          },
+          {
+            label: "O3 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) => (obj.o3)),
+            borderWidth: 2,
+          },
+          {
+            label: "SO2 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) => (obj.so2)),
+            borderWidth: 2,
+          },
+          {
+            label: "PM2_5 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) => (obj.pm2_5)),
+            borderWidth: 2,
+          },
+          {
+            label: "PM10 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) => (obj.pm10)),
+            borderWidth: 2,
+          },
+          {
+            label: "NH3 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) => (obj.nh3)),
+            borderWidth: 2,
+          },
+        ],
+      });
+
     });
   };
 
@@ -278,6 +402,14 @@ function Home() {
         setDados(temperaturaDados);
         setGraphTitle(" Dados de Temperatura (°C) ");
         break;
+      case "poluicao ar":
+        setDados(poluicaoAirQDados);
+        setGraphTitle(" Poluição do Ar ");
+        break;
+      case "componentes poluicao":
+        setDados(poluicaoCompDados);
+        setGraphTitle(" Dados de Poluição do Ar ");
+        break;
       default:
         setDados(sensacaoTermicaDados);
         setGraphTitle(" Dados de Sensação Térmica (°C) ");
@@ -290,6 +422,8 @@ function Home() {
     umidadeDados,
     temperaturaDados,
     sensacaoTermicaDados,
+    poluicaoAirQDados,
+    poluicaoCompDados,
   ]);
 
   function handleDataChange(data, name) {
@@ -343,6 +477,16 @@ function Home() {
             >
               Dados de Sensação Térmica
             </button>
+            <button
+              onClick={() => handleDataChange(poluicaoAirQDados, "poluicao ar")}
+            >
+              Poluição do Ar
+            </button>
+            <button
+              onClick={() => handleDataChange(poluicaoCompDados, "componentes poluicao")}
+            >
+              Dados de Poluição do Ar
+            </button>
             <button onClick={() => setShowAll(!showAll)}>
               Mostrar Todos Dados
             </button>
@@ -364,11 +508,42 @@ function Home() {
           </div>
         </div>
 
-        {!showAll && (
+        {/* {!showAll && (
           <div className="chart-container">
             <h3>{graphTitle}</h3>
             <GraficoLinha dadosGrafico={dados} />
           </div>
+        )} */}
+
+        {!showAll && (dados !== poluicaoAirQDados && dados !== poluicaoCompDados) && (
+          <div className="chart-container">
+            <h3>{graphTitle}</h3>
+            <GraficoLinha
+              dadosGrafico={dados}
+            />
+          </div>
+        )}
+        
+        {!showAll && (dados === poluicaoAirQDados && dados !== poluicaoCompDados) && (
+          <div className="chart-container">
+            <h3>{graphTitle}</h3>
+            <GraficoLinha
+              dadosGrafico={dados}
+            />
+          </div>
+        )}
+
+        {!showAll && dados !== poluicaoAirQDados && dados === poluicaoCompDados && (
+          <>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div className="chart-container" key={i}>
+                <h3>{dados.datasets[i].label}</h3>
+                <GraficoColuna
+                  dadosGrafico={{ labels: dados.labels, datasets: [dados.datasets[i]] }}
+                />
+              </div>
+            ))}
+          </>
         )}
 
         {showAll && (
@@ -392,6 +567,18 @@ function Home() {
             <div className="chart-container">
               <h3> Dados de Sensação Térmica (°C) </h3>
               <GraficoLinha dadosGrafico={sensacaoTermicaDados} />
+            </div>
+            <div className="chart-container">
+              <h3> Poluição do Ar </h3>
+              <GraficoColuna
+                dadosGrafico={poluicaoAirQDados}
+              />
+            </div>
+            <div className="chart-container">
+              <h3> Dados de Poluição do Ar </h3>
+              <GraficoColuna
+                dadosGrafico={poluicaoCompDados}
+              />
             </div>
           </>
         )}

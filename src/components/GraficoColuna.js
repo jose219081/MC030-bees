@@ -96,6 +96,8 @@ function GraficoColuna(props) {
     graficoRef.current.resetZoom(); // Use the plugin's resetZoom method
   }, [graficoRef]);
 
+  // const ddd = { labels: props.dadosGrafico.labels, datasets: [props.dadosGrafico.datasets[0]]}
+  
   return (
     <>
       <Bar ref={graficoRef} data={props.dadosGrafico} options={options} />
