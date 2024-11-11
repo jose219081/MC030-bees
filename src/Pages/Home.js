@@ -3,6 +3,7 @@ import { database } from "../firebase";
 import { ref, onValue } from "firebase/database";
 import GraficoLinha from "../components/GraficoLinha";
 import GraficoColuna from "../components/GraficoColuna";
+import GraficoCombinado from "../components/GraficoCombinado";
 
 function Home() {
   const [databaseName, setDatabaseName] = useState("bee_data");
@@ -23,16 +24,28 @@ function Home() {
     labels: [],
     datasets: [
       {
+        type: "bar",
         label: "Proximidade Placa",
         data: proximidadeRsp,
         borderWidth: 2,
+        yAxisID: "y",
+      },
+      {
+        type: "line",
+        label: "Temperatura Placa (°C)",
+        data: temperaturaRsp,
+        borderWidth: 2,
+        yAxisID: "y1",
       },
     ],
   });
+  
   const [sensacaoTermicaDados, setSensacaoTermicaDados] = useState({
     labels: [],
     datasets: [
       {
+        type: "line",
+        yAxisID: "y",
         label: "Sensacao termica API (°C)",
         data: sensacaoTermicaApi,
         borderWidth: 2,
@@ -43,6 +56,8 @@ function Home() {
     labels: [],
     datasets: [
       {
+        type: "line",
+        yAxisID: "y",
         label: "Poluicao Api",
         data: poluicaoAirQApi,
         borderWidth: 2,
@@ -53,57 +68,76 @@ function Home() {
     labels: [],
     datasets: [
       {
+        type: "line",
+        yAxisID: "y",
         label: "Poluicao Componentes CO Api",
         data: poluicaoCompApi.co,
         borderWidth: 2,
       },
       {
+        type: "line",
+        yAxisID: "y",
         label: "Poluicao Componentes NO Api",
         data: poluicaoCompApi.no,
         borderWidth: 2,
       },
       {
+        type: "line",
+        yAxisID: "y",
         label: "Poluicao Componentes NO2 Api",
         data: poluicaoCompApi.no,
         borderWidth: 2,
       },
       {
+        type: "line",
+        yAxisID: "y",
         label: "Poluicao Componentes O3 Api",
         data: poluicaoCompApi.co,
         borderWidth: 2,
       },
       {
+        type: "line",
+        yAxisID: "y",
         label: "Poluicao Componentes SO2 Api",
         data: poluicaoCompApi.co,
         borderWidth: 2,
       },
       {
+        type: "line",
+        yAxisID: "y",
         label: "Poluicao Componentes PM2_5 Api",
         data: poluicaoCompApi.co,
         borderWidth: 2,
       },
       {
+        type: "line",
+        yAxisID: "y",
         label: "Poluicao Componentes PM10 Api",
         data: poluicaoCompApi.co,
         borderWidth: 2,
       },
       {
+        type: "line",
+        yAxisID: "y",
         label: "Poluicao Componentes NH3 Api",
         data: poluicaoCompApi.co,
         borderWidth: 2,
       },
-      
     ],
   });
   const [temperaturaDados, setTemperaturaDados] = useState({
     labels: [],
     datasets: [
       {
+        type: "line",
+        yAxisID: "y",
         label: "Temperatura API (°C)",
         data: temperaturaApi,
         borderWidth: 2,
       },
       {
+        type: "line",
+        yAxisID: "y",
         label: "Temperatura Rsp (°C)",
         data: temperaturaRsp,
         borderWidth: 2,
@@ -114,11 +148,15 @@ function Home() {
     labels: [],
     datasets: [
       {
+        type: "line",
+        yAxisID: "y",
         label: "Umidade API (%)",
         data: umidadeApi,
         borderWidth: 2,
       },
       {
+        type: "line",
+        yAxisID: "y",
         label: "Umidade Rsp (%)",
         data: umidadeRsp,
         borderWidth: 2,
@@ -129,11 +167,15 @@ function Home() {
     labels: [],
     datasets: [
       {
+        type: "line",
+        yAxisID: "y",
         label: "Pressao API (hPa)",
         data: pressaoApi,
         borderWidth: 2,
       },
       {
+        type: "line",
+        yAxisID: "y",
         label: "Pressao Rsp (hPa)",
         data: pressaoRsp,
         borderWidth: 2,
@@ -191,7 +233,6 @@ function Home() {
           (!startDate || dateTimestamp >= startDate) &&
           (!endDate || dateTimestamp <= endDate)
         ) {
-          console.log(values[key])
           dataArray.push({
             timestamp: formattedTimestamp,
             sensacaoTermicaApi:
@@ -246,10 +287,18 @@ function Home() {
         labels: newTimestamps,
         datasets: [
           {
+            type: "bar",
             label: "Proximidade Placa",
             data: newProximidadeRsp,
             borderWidth: 2,
-            tension: 0.4,
+            yAxisID: "y",
+          },
+          {
+            type: "line",
+            label: "Temperatura Placa (°C)",
+            data: newTemperaturaRsp,
+            borderWidth: 2,
+            yAxisID: "y1",
           },
         ],
       });
@@ -258,6 +307,8 @@ function Home() {
         labels: newTimestamps,
         datasets: [
           {
+            type: "line",
+            yAxisID: "y",
             label: "Sensacao térmica Openw (°C)",
             data: newSensacaoTermicaApi,
             borderWidth: 2,
@@ -270,12 +321,16 @@ function Home() {
         labels: newTimestamps,
         datasets: [
           {
+            type: "line",
+            yAxisID: "y",
             label: "Temperatura OpenW (°C)",
             data: newTemperaturaApi,
             borderWidth: 2,
             tension: 0.4,
           },
           {
+            type: "line",
+            yAxisID: "y",
             label: "Temperatura Placa (°C)",
             data: newTemperaturaRsp,
             borderWidth: 2,
@@ -288,12 +343,16 @@ function Home() {
         labels: newTimestamps,
         datasets: [
           {
+            type: "line",
+            yAxisID: "y",
             label: "Umidade OpenW (%)",
             data: newUmidadeApi,
             borderWidth: 2,
             tension: 0.4,
           },
           {
+            type: "line",
+            yAxisID: "y",
             label: "Umidade Placa (%)",
             data: newUmidadeRsp,
             borderWidth: 2,
@@ -306,12 +365,16 @@ function Home() {
         labels: newTimestamps,
         datasets: [
           {
+            type: "line",
+            yAxisID: "y",
             label: "Pressão OpenW (hPa)",
             data: newPressaoApi,
             borderWidth: 2,
             tension: 0.4,
           },
           {
+            type: "line",
+            yAxisID: "y",
             label: "Pressão Placa (hPa)",
             data: newPressaoRsp,
             borderWidth: 2,
@@ -324,6 +387,8 @@ function Home() {
         labels: newTimestamps,
         datasets: [
           {
+            type: "line",
+            yAxisID: "y",
             label: "Poluicao do Ar Openw",
             data: newPoluicaoAirQApi,
             borderWidth: 2,
@@ -335,48 +400,63 @@ function Home() {
         labels: newTimestamps,
         datasets: [
           {
+            type: "line",
+            yAxisID: "y",
             label: "CO (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => (obj.co)),
+            data: newPoluicaoCompApi.map((obj) => obj.co),
             borderWidth: 2,
           },
           {
+            type: "line",
+            yAxisID: "y",
             label: "NO (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => (obj.no)),
+            data: newPoluicaoCompApi.map((obj) => obj.no),
             borderWidth: 2,
           },
           {
+            type: "line",
+            yAxisID: "y",
             label: "NO2 (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => (obj.no2)),
+            data: newPoluicaoCompApi.map((obj) => obj.no2),
             borderWidth: 2,
           },
           {
+            type: "line",
+            yAxisID: "y",
             label: "O3 (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => (obj.o3)),
+            data: newPoluicaoCompApi.map((obj) => obj.o3),
             borderWidth: 2,
           },
           {
+            type: "line",
+            yAxisID: "y",
             label: "SO2 (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => (obj.so2)),
+            data: newPoluicaoCompApi.map((obj) => obj.so2),
             borderWidth: 2,
           },
           {
+            type: "line",
+            yAxisID: "y",
             label: "PM2_5 (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => (obj.pm2_5)),
+            data: newPoluicaoCompApi.map((obj) => obj.pm2_5),
             borderWidth: 2,
           },
           {
+            type: "line",
+            yAxisID: "y",
             label: "PM10 (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => (obj.pm10)),
+            data: newPoluicaoCompApi.map((obj) => obj.pm10),
             borderWidth: 2,
           },
           {
+            type: "line",
+            yAxisID: "y",
             label: "NH3 (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => (obj.nh3)),
+            data: newPoluicaoCompApi.map((obj) => obj.nh3),
             borderWidth: 2,
           },
         ],
       });
-
     });
   };
 
@@ -483,7 +563,9 @@ function Home() {
               Poluição do Ar
             </button>
             <button
-              onClick={() => handleDataChange(poluicaoCompDados, "componentes poluicao")}
+              onClick={() =>
+                handleDataChange(poluicaoCompDados, "componentes poluicao")
+              }
             >
               Dados de Poluição do Ar
             </button>
@@ -508,49 +590,55 @@ function Home() {
           </div>
         </div>
 
-        {/* {!showAll && (
-          <div className="chart-container">
-            <h3>{graphTitle}</h3>
-            <GraficoLinha dadosGrafico={dados} />
-          </div>
-        )} */}
+        {!showAll &&
+          dados !== poluicaoAirQDados &&
+          dados !== poluicaoCompDados &&
+          dados !== proximidadeDados && (
+            <div className="chart-container">
+              <h3>{graphTitle}</h3>
+              <GraficoLinha dadosGrafico={dados} />
+            </div>
+          )}
 
-        {!showAll && (dados !== poluicaoAirQDados && dados !== poluicaoCompDados) && (
+        {!showAll && dados == proximidadeDados && (
           <div className="chart-container">
             <h3>{graphTitle}</h3>
-            <GraficoLinha
-              dadosGrafico={dados}
-            />
-          </div>
-        )}
-        
-        {!showAll && (dados === poluicaoAirQDados && dados !== poluicaoCompDados) && (
-          <div className="chart-container">
-            <h3>{graphTitle}</h3>
-            <GraficoLinha
-              dadosGrafico={dados}
-            />
+            <GraficoCombinado data={dados} />
           </div>
         )}
 
-        {!showAll && dados !== poluicaoAirQDados && dados === poluicaoCompDados && (
-          <>
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div className="chart-container" key={i}>
-                <h3>{dados.datasets[i].label}</h3>
-                <GraficoColuna
-                  dadosGrafico={{ labels: dados.labels, datasets: [dados.datasets[i]] }}
-                />
-              </div>
-            ))}
-          </>
-        )}
+        {!showAll &&
+          dados === poluicaoAirQDados &&
+          dados !== poluicaoCompDados && (
+            <div className="chart-container">
+              <h3>{graphTitle}</h3>
+              <GraficoLinha dadosGrafico={dados} />
+            </div>
+          )}
+
+        {!showAll &&
+          dados !== poluicaoAirQDados &&
+          dados === poluicaoCompDados && (
+            <>
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div className="chart-container" key={i}>
+                  <h3>{dados.datasets[i].label}</h3>
+                  <GraficoColuna
+                    dadosGrafico={{
+                      labels: dados.labels,
+                      datasets: [dados.datasets[i]],
+                    }}
+                  />
+                </div>
+              ))}
+            </>
+          )}
 
         {showAll && (
           <>
             <div className="chart-container">
               <h3> Dados do Sensor de Proximidade </h3>
-              <GraficoLinha dadosGrafico={proximidadeDados} />
+              <GraficoCombinado data={proximidadeDados} />
             </div>
             <div className="chart-container">
               <h3> Dados de Pressão (hPa) </h3>
@@ -570,15 +658,11 @@ function Home() {
             </div>
             <div className="chart-container">
               <h3> Poluição do Ar </h3>
-              <GraficoColuna
-                dadosGrafico={poluicaoAirQDados}
-              />
+              <GraficoColuna dadosGrafico={poluicaoAirQDados} />
             </div>
             <div className="chart-container">
               <h3> Dados de Poluição do Ar </h3>
-              <GraficoColuna
-                dadosGrafico={poluicaoCompDados}
-              />
+              <GraficoColuna dadosGrafico={poluicaoCompDados} />
             </div>
           </>
         )}
