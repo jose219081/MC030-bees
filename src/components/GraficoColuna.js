@@ -1,9 +1,8 @@
 import React, { useCallback, useRef } from "react";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
-  LineElement,
-  LinearScale,
+  BarElement,
   CategoryScale,
   PointElement,
 } from "chart.js/auto";
@@ -12,13 +11,12 @@ import { saveAs } from "file-saver";
 
 ChartJS.register(
   zoomPlugin,
-  LineElement,
-  LinearScale,
+  BarElement,
   CategoryScale,
   PointElement
 );
 
-function GraficoLinha(props) {
+function GraficoColuna(props) {
   const graficoRef = useRef(null);
   const options = {
     plugins: {
@@ -54,7 +52,6 @@ function GraficoLinha(props) {
     scales: {
       x: {
         ticks: {
-          maxTicksLimit: 20,
           autoSkip: false,
           maxRotation: 0,
           align: "middle",
@@ -69,9 +66,7 @@ function GraficoLinha(props) {
         },
       },
       y: {
-        beginAtZero: false, // Start the Y axis at zero
-        suggestedMax: ((Math.max(...props.dadosGrafico.datasets[0].data) - Math.min(...props.dadosGrafico.datasets[0].data))) === 0 ?
-        Math.max(...props.dadosGrafico.datasets[0].data)*1.05 : (Math.max(...props.dadosGrafico.datasets[0].data) + (Math.max(...props.dadosGrafico.datasets[0].data) - Math.min(...props.dadosGrafico.datasets[0].data)) * 0.1), 
+        beginAtZero: true, // Start the Y axis at zero
       },
     },
   };
@@ -101,9 +96,11 @@ function GraficoLinha(props) {
     graficoRef.current.resetZoom(); // Use the plugin's resetZoom method
   }, [graficoRef]);
 
+  // const ddd = { labels: props.dadosGrafico.labels, datasets: [props.dadosGrafico.datasets[0]]}
+  
   return (
     <>
-      <Line ref={graficoRef} data={props.dadosGrafico} options={options} />
+      <Bar ref={graficoRef} data={props.dadosGrafico} options={options} />
       <div className="grafico-buttons">
         <button onClick={ResetZoom}>Reset Zoom</button>
         <button
@@ -120,4 +117,4 @@ function GraficoLinha(props) {
   );
 }
 
-export default GraficoLinha;
+export default GraficoColuna;
