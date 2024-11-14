@@ -1,6 +1,7 @@
 .App {
   text-align: center;
   background-color: #f8f9fa;
+  min-height: 70vh;
 }
 
 .App-logo {
@@ -59,6 +60,8 @@
 #btns h2 {
   font-family: "Montserrat", sans-serif;
   font-weight: 700; /* Make sure to match the imported weights */
+  margin: 0.9rem;
+  margin-left: 0px;
 }
 
 #btns button {
@@ -138,7 +141,6 @@
 .date-inputs {
   display: flex;
   align-items: center; /* Center vertically */
-  margin-top: 20px; /* Space above the date inputs */
 }
 
 .date-inputs label {
@@ -196,7 +198,7 @@
 .styled-textfield {
   background-color: white;
   padding: 10px;
-  width: 100%;
+  width: 86%;
   border: 2px solid #007bff;
   border-radius: 8px;
   font-size: 16px;
@@ -313,4 +315,10 @@
   background-color: rgba(255, 255, 255, 0.3); /* Hover effect */
 }
 
+footer p {
+  margin: 0.5rem;
+}
 
+html {
+  min-height: 100vh;
+}

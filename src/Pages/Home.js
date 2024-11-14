@@ -4,6 +4,28 @@ import { ref, onValue } from "firebase/database";
 import GraficoLinha from "../components/GraficoLinha";
 import GraficoColuna from "../components/GraficoColuna";
 import GraficoCombinado from "../components/GraficoCombinado";
+import { saveAs } from "file-saver";
+
+const exportCSV = (dados, filename) => {
+  const csvRows = [];
+  const headers = [
+    "Timestamp",
+    ...dados.datasets.map((dataset) => dataset.label),
+  ];
+  csvRows.push(headers.join(","));
+
+  dados.labels.forEach((label, i) => {
+    const row = [label];
+    dados.datasets.forEach((dataset) => {
+      row.push(dataset.data[i]);
+    });
+    csvRows.push(row.join(","));
+  });
+
+  const csvString = csvRows.join("\n");
+  const blob = new Blob([csvString], { type: "text/csv" });
+  saveAs(blob, filename);
+};
 
 function Home() {
   const [databaseName, setDatabaseName] = useState("bee_data");
@@ -205,6 +227,9 @@ function Home() {
     ],
   });
 
+  const [allData, setAllData] = useState();
+  const [partialData, setPartialData] = useState();
+
   const [dados, setDados] = useState(proximidadeDados);
   const [nomeDados, setNomeDados] = useState("proximidade");
   const [showAll, setShowAll] = useState(false);
@@ -257,15 +282,28 @@ function Home() {
         ) {
           dataArray.push({
             timestamp: formattedTimestamp,
-            sensacaoTermicaApi:
-              values[key].openweathermap.main.feels_like - 273,
-            temperaturaApi: values[key].openweathermap.main.temp - 273,
-            umidadeApi: values[key].openweathermap.main.humidity,
-            pressaoApi: values[key].openweathermap.main.grnd_level,
+            sensacaoTermicaApi: parseFloat(
+              values[key].openweathermap.main.feels_like - 273
+            ).toFixed(2),
+            temperaturaApi: parseFloat(
+              values[key].openweathermap.main.temp - 273
+            ).toFixed(2),
+            umidadeApi: parseFloat(
+              values[key].openweathermap.main.humidity
+            ).toFixed(2),
+            pressaoApi: parseFloat(
+              values[key].openweathermap.main.grnd_level
+            ).toFixed(2),
             proximidadeRsp: values[key].sensor.proximidade,
-            temperaturaRsp: values[key].sensor.temperatura_interna,
-            umidadeRsp: values[key].sensor.umidade_interna,
-            pressaoRsp: values[key].sensor.pressao_interna,
+            temperaturaRsp: parseFloat(
+              values[key].sensor.temperatura_interna
+            ).toFixed(2),
+            umidadeRsp: parseFloat(values[key].sensor.umidade_interna).toFixed(
+              2
+            ),
+            pressaoRsp: parseFloat(values[key].sensor.pressao_interna).toFixed(
+              2
+            ),
             poluicaoAirQApi: values[key].pollution?.list[0].main?.aqi,
             poluicaoCompAPI: values[key].pollution?.list[0].components,
           });
@@ -425,57 +463,321 @@ function Home() {
             type: "line",
             yAxisID: "y",
             label: "CO (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => obj.co),
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.co).toFixed(2)
+            ),
             borderWidth: 2,
           },
           {
             type: "line",
             yAxisID: "y",
             label: "NO (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => obj.no),
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.no).toFixed(2)
+            ),
             borderWidth: 2,
           },
           {
             type: "line",
             yAxisID: "y",
             label: "NO2 (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => obj.no2),
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.no2).toFixed(2)
+            ),
             borderWidth: 2,
           },
           {
             type: "line",
             yAxisID: "y",
             label: "O3 (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => obj.o3),
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.o3).toFixed(2)
+            ),
             borderWidth: 2,
           },
           {
             type: "line",
             yAxisID: "y",
             label: "SO2 (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => obj.so2),
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.so2).toFixed(2)
+            ),
             borderWidth: 2,
           },
           {
             type: "line",
             yAxisID: "y",
             label: "PM2_5 (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => obj.pm2_5),
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.pm2_5).toFixed(2)
+            ),
             borderWidth: 2,
           },
           {
             type: "line",
             yAxisID: "y",
             label: "PM10 (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => obj.pm10),
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.pm10).toFixed(2)
+            ),
             borderWidth: 2,
           },
           {
             type: "line",
             yAxisID: "y",
             label: "NH3 (μg/m³)",
-            data: newPoluicaoCompApi.map((obj) => obj.nh3),
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.nh3).toFixed(2)
+            ),
             borderWidth: 2,
+          },
+        ],
+      });
+
+      setPartialData({
+        labels: newTimestamps,
+        datasets: [
+          {
+            label: "Proximidade Placa",
+            data: newProximidadeRsp,
+          },
+          {
+            label: "Sensacao térmica Online (°C)",
+            data: newSensacaoTermicaApi,
+          },
+          {
+            label: "Temperatura Online (°C)",
+            data: newTemperaturaApi,
+          },
+          {
+            label: "Temperatura Placa (°C)",
+            data: newTemperaturaRsp,
+          },
+          {
+            label: "Umidade Online (%)",
+            data: newUmidadeApi,
+          },
+          {
+            label: "Umidade Placa (%)",
+            data: newUmidadeRsp,
+          },
+          {
+            label: "Pressão Online (hPa)",
+            data: newPressaoApi,
+          },
+          {
+            label: "Pressão Placa (hPa)",
+            data: newPressaoRsp,
+          },
+          {
+            label: "Poluicao do Ar Online",
+            data: newPoluicaoAirQApi,
+          },
+          {
+            label: "CO (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.co).toFixed(2)
+            ),
+          },
+          {
+            label: "NO (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.no).toFixed(2)
+            ),
+          },
+          {
+            label: "NO2 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.no2).toFixed(2)
+            ),
+          },
+          {
+            label: "O3 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.o3).toFixed(2)
+            ),
+          },
+          {
+            label: "SO2 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.so2).toFixed(2)
+            ),
+          },
+          {
+            label: "PM2_5 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.pm2_5).toFixed(2)
+            ),
+          },
+          {
+            label: "PM10 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.pm10).toFixed(2)
+            ),
+          },
+          {
+            label: "NH3 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.nh3).toFixed(2)
+            ),
+          },
+        ],
+      });
+    });
+  };
+
+  const fetchAllData = async () => {
+    onValue(dataRef, (snapshot) => {
+      const values = snapshot.val();
+      const dataArray = [];
+
+      for (let key in values) {
+        const formattedTimestamp = formatTimestamp(key);
+
+        dataArray.push({
+          timestamp: formattedTimestamp,
+          sensacaoTermicaApi: parseFloat(
+            values[key].openweathermap.main.feels_like - 273
+          ).toFixed(2),
+          temperaturaApi: parseFloat(
+            values[key].openweathermap.main.temp - 273
+          ).toFixed(2),
+          umidadeApi: parseFloat(
+            values[key].openweathermap.main.humidity
+          ).toFixed(2),
+          pressaoApi: parseFloat(
+            values[key].openweathermap.main.grnd_level
+          ).toFixed(2),
+          proximidadeRsp: values[key].sensor.proximidade,
+          temperaturaRsp: parseFloat(
+            values[key].sensor.temperatura_interna
+          ).toFixed(2),
+          umidadeRsp: parseFloat(values[key].sensor.umidade_interna).toFixed(2),
+          pressaoRsp: parseFloat(values[key].sensor.pressao_interna).toFixed(2),
+          poluicaoAirQApi: values[key].pollution?.list[0].main?.aqi,
+          poluicaoCompAPI: values[key].pollution?.list[0].components,
+        });
+      }
+
+      // Ordena os dados pelos timestamps
+      dataArray.sort(
+        (a, b) =>
+          parseFormattedTimestamp(a.timestamp) -
+          parseFormattedTimestamp(b.timestamp)
+      );
+
+      const newTimestamps = [];
+      const newSensacaoTermicaApi = [];
+      const newTemperaturaApi = [];
+      const newUmidadeApi = [];
+      const newPressaoApi = [];
+      const newProximidadeRsp = [];
+      const newTemperaturaRsp = [];
+      const newUmidadeRsp = [];
+      const newPressaoRsp = [];
+      const newPoluicaoAirQApi = [];
+      const newPoluicaoCompApi = [];
+
+      dataArray.forEach((data, index) => {
+        newTimestamps.push(data.timestamp);
+        newSensacaoTermicaApi.push(data.sensacaoTermicaApi);
+        newTemperaturaApi.push(data.temperaturaApi);
+        newUmidadeApi.push(data.umidadeApi);
+        newPressaoApi.push(data.pressaoApi);
+        newProximidadeRsp.push(data.proximidadeRsp);
+        newTemperaturaRsp.push(data.temperaturaRsp);
+        newUmidadeRsp.push(data.umidadeRsp);
+        newPressaoRsp.push(data.pressaoRsp);
+        newPoluicaoAirQApi.push(data.poluicaoAirQApi);
+        newPoluicaoCompApi.push(data.poluicaoCompAPI);
+      });
+
+      setAllData({
+        labels: newTimestamps,
+        datasets: [
+          {
+            label: "Proximidade Placa",
+            data: newProximidadeRsp,
+          },
+          {
+            label: "Sensacao térmica Online (°C)",
+            data: newSensacaoTermicaApi,
+          },
+          {
+            label: "Temperatura Online (°C)",
+            data: newTemperaturaApi,
+          },
+          {
+            label: "Temperatura Placa (°C)",
+            data: newTemperaturaRsp,
+          },
+          {
+            label: "Umidade Online (%)",
+            data: newUmidadeApi,
+          },
+          {
+            label: "Umidade Placa (%)",
+            data: newUmidadeRsp,
+          },
+          {
+            label: "Pressão Online (hPa)",
+            data: newPressaoApi,
+          },
+          {
+            label: "Pressão Placa (hPa)",
+            data: newPressaoRsp,
+          },
+          {
+            label: "Poluicao do Ar Online",
+            data: newPoluicaoAirQApi,
+          },
+          {
+            label: "CO (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.co).toFixed(2)
+            ),
+          },
+          {
+            label: "NO (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.no).toFixed(2)
+            ),
+          },
+          {
+            label: "NO2 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.no2).toFixed(2)
+            ),
+          },
+          {
+            label: "O3 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.o3).toFixed(2)
+            ),
+          },
+          {
+            label: "SO2 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.so2).toFixed(2)
+            ),
+          },
+          {
+            label: "PM2_5 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.pm2_5).toFixed(2)
+            ),
+          },
+          {
+            label: "PM10 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.pm10).toFixed(2)
+            ),
+          },
+          {
+            label: "NH3 (μg/m³)",
+            data: newPoluicaoCompApi.map((obj) =>
+              parseFloat(obj.nh3).toFixed(2)
+            ),
           },
         ],
       });
@@ -548,7 +850,7 @@ function Home() {
         ) {
           dailyProx.push(dProx);
           meanTemp = countTemp / count;
-          dailyTemp.push(meanTemp);
+          dailyTemp.push(parseFloat(meanTemp).toFixed(2));
           newDatestamps.push(data.timestamp.substring(0, 10));
           dProx = data.proximidadeRsp;
           count = 1;
@@ -556,7 +858,7 @@ function Home() {
         } else if (index === dataArray.length - 1) {
           dailyProx.push(dProx);
           meanTemp = countTemp / count;
-          dailyTemp.push(meanTemp);
+          dailyTemp.push(parseFloat(meanTemp).toFixed(2));
         } else {
           dProx += data.proximidadeRsp;
           count += 1;
@@ -589,6 +891,7 @@ function Home() {
   useEffect(() => {
     fetchData();
     fetchDayData();
+    fetchAllData();
   }, [startTime, endTime, dataRef]);
 
   useEffect(() => {
@@ -671,14 +974,14 @@ function Home() {
             <button
               onClick={() => handleDataChange(proximidadeDados, "proximidade")}
             >
-              Dados do Sensor de Proximidade
+              Dados de Proximidade
             </button>
             <button
               onClick={() =>
                 handleDataChange(proximidadeDiariaDados, "proximidade diaria")
               }
             >
-              Dados do Sensor de Proximidade por dia
+              Dados de Proximidade diario
             </button>
             <button onClick={() => handleDataChange(pressaoDados, "pressao")}>
               Dados de Pressão
@@ -714,19 +1017,32 @@ function Home() {
           </div>
           <h2>Selecione o intervalo de datas: </h2>
           <div className="date-inputs">
-            <label>Timestamp Inicial: </label>
+            <label>Data Inicial: </label>
             <input
               type="datetime-local"
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
             />
-            <label style={{ marginLeft: 30 }}>Timestamp Final: </label>
+            <label style={{ marginLeft: 30 }}>Data Final: </label>
             <input
               type="datetime-local"
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
             />
           </div>
+          <h2>Exportar em CSV todos os dados do dashboard: </h2>
+          <div className="button-grid">
+            <button onClick={() => exportCSV(allData, "dados_gerais.csv")}>
+              Exportar CSV total
+            </button>
+            <button onClick={() => exportCSV(partialData, "dados_parcial.csv")}>
+              Exportar CSV parcial
+            </button>
+          </div>
+          <p style={{ fontSize: 10 }}>
+            *OBS: Exportar CSV parcial utiliza o intervalo de datas do input
+            acima, enquanto exportar CSV total utiliza todos dados.
+          </p>
         </div>
 
         {!showAll &&

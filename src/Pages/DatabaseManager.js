@@ -73,9 +73,6 @@ function DatabaseManager() {
           </select>
           <button onClick={openModal}>Deletar Dados</button>
         </div>
-        <div id="btns">
-         O que colocar aqui?
-        </div>
 
         {isModalOpen && (
           <div className="modal">
