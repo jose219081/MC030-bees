@@ -19,6 +19,8 @@ function Home() {
   const pressaoRsp = [];
   const poluicaoAirQApi = [];
   const poluicaoCompApi = [];
+  const dailyProximidade = [];
+  const dailyTemperatura = [];
 
   const [proximidadeDados, setProximidade] = useState({
     labels: [],
@@ -39,7 +41,27 @@ function Home() {
       },
     ],
   });
-  
+
+  const [proximidadeDiariaDados, setProximidadeDiaria] = useState({
+    labels: [],
+    datasets: [
+      {
+        type: "bar",
+        label: "Proximidade Diária Placa",
+        data: dailyProximidade,
+        borderWidth: 2,
+        yAxisID: "y",
+      },
+      {
+        type: "line",
+        label: "Temperatura Diária Placa (°C)",
+        data: dailyTemperatura,
+        borderWidth: 2,
+        yAxisID: "y1",
+      },
+    ],
+  });
+
   const [sensacaoTermicaDados, setSensacaoTermicaDados] = useState({
     labels: [],
     datasets: [
@@ -269,7 +291,7 @@ function Home() {
       const newPoluicaoAirQApi = [];
       const newPoluicaoCompApi = [];
 
-      dataArray.forEach((data) => {
+      dataArray.forEach((data, index) => {
         newTimestamps.push(data.timestamp);
         newSensacaoTermicaApi.push(data.sensacaoTermicaApi);
         newTemperaturaApi.push(data.temperaturaApi);
@@ -309,7 +331,7 @@ function Home() {
           {
             type: "line",
             yAxisID: "y",
-            label: "Sensacao térmica Openw (°C)",
+            label: "Sensacao térmica Online (°C)",
             data: newSensacaoTermicaApi,
             borderWidth: 2,
             tension: 0.4,
@@ -323,7 +345,7 @@ function Home() {
           {
             type: "line",
             yAxisID: "y",
-            label: "Temperatura OpenW (°C)",
+            label: "Temperatura Online (°C)",
             data: newTemperaturaApi,
             borderWidth: 2,
             tension: 0.4,
@@ -345,7 +367,7 @@ function Home() {
           {
             type: "line",
             yAxisID: "y",
-            label: "Umidade OpenW (%)",
+            label: "Umidade Online (%)",
             data: newUmidadeApi,
             borderWidth: 2,
             tension: 0.4,
@@ -367,7 +389,7 @@ function Home() {
           {
             type: "line",
             yAxisID: "y",
-            label: "Pressão OpenW (hPa)",
+            label: "Pressão Online (hPa)",
             data: newPressaoApi,
             borderWidth: 2,
             tension: 0.4,
@@ -389,7 +411,7 @@ function Home() {
           {
             type: "line",
             yAxisID: "y",
-            label: "Poluicao do Ar Openw",
+            label: "Poluicao do Ar Online",
             data: newPoluicaoAirQApi,
             borderWidth: 2,
           },
@@ -460,8 +482,113 @@ function Home() {
     });
   };
 
+  const fetchDayData = async () => {
+    onValue(dataRef, (snapshot) => {
+      const values = snapshot.val();
+      const dataArray = [];
+
+      const parseFormattedDailyTimestamp = (formattedTimestamp) => {
+        const [date] = formattedTimestamp.split(" - ");
+        const [day, month, year] = date.split("/");
+        return new Date(`${year}-${month}-${day}`);
+      };
+
+      for (let key in values) {
+        const formattedTimestamp = formatTimestamp(key);
+        const dateTimestamp = parseFormattedDailyTimestamp(formattedTimestamp);
+
+        const startDate = startTime
+          ? new Date(startTime.substring(0, 10))
+          : null;
+        const endDate = endTime ? new Date(endTime.substring(0, 10)) : null;
+
+        if (
+          (!startDate || dateTimestamp >= startDate) &&
+          (!endDate || dateTimestamp <= endDate)
+        ) {
+          dataArray.push({
+            timestamp: formattedTimestamp,
+            proximidadeRsp: values[key].sensor.proximidade,
+            temperaturaRsp: values[key].sensor.temperatura_interna,
+          });
+        }
+      }
+
+      // Ordena os dados pelos timestamps
+      dataArray.sort(
+        (a, b) =>
+          parseFormattedTimestamp(a.timestamp) -
+          parseFormattedTimestamp(b.timestamp)
+      );
+
+      const dailyProx = [];
+      const dailyTemp = [];
+      const newDatestamps = [];
+
+      let dProx = 0;
+      let count = 0;
+      let countTemp = 0;
+      let meanTemp = 0;
+      dataArray.forEach((data, index) => {
+        if (
+          newDatestamps.filter(
+            (date) => date.substring(0, 10) !== data.timestamp.substring(0, 10)
+          ).length === newDatestamps.length &&
+          newDatestamps.length === 0
+        ) {
+          newDatestamps.push(data.timestamp.substring(0, 10));
+          dProx = data.proximidadeRsp;
+          count = 1;
+          countTemp = data.temperaturaRsp;
+        } else if (
+          newDatestamps.filter(
+            (date) => date.substring(0, 10) !== data.timestamp.substring(0, 10)
+          ).length === newDatestamps.length &&
+          newDatestamps.length > 0
+        ) {
+          dailyProx.push(dProx);
+          meanTemp = countTemp / count;
+          dailyTemp.push(meanTemp);
+          newDatestamps.push(data.timestamp.substring(0, 10));
+          dProx = data.proximidadeRsp;
+          count = 1;
+          countTemp = data.temperaturaRsp;
+        } else if (index === dataArray.length - 1) {
+          dailyProx.push(dProx);
+          meanTemp = countTemp / count;
+          dailyTemp.push(meanTemp);
+        } else {
+          dProx += data.proximidadeRsp;
+          count += 1;
+          countTemp += data.temperaturaRsp;
+        }
+      });
+
+      setProximidadeDiaria({
+        labels: newDatestamps,
+        datasets: [
+          {
+            type: "bar",
+            label: "Proximidade Diária Placa",
+            data: dailyProx,
+            borderWidth: 2,
+            yAxisID: "y",
+          },
+          {
+            type: "line",
+            label: "Temperatura Diária Placa (°C)",
+            data: dailyTemp,
+            borderWidth: 2,
+            yAxisID: "y1",
+          },
+        ],
+      });
+    });
+  };
+
   useEffect(() => {
     fetchData();
+    fetchDayData();
   }, [startTime, endTime, dataRef]);
 
   useEffect(() => {
@@ -469,6 +596,10 @@ function Home() {
       case "proximidade":
         setDados(proximidadeDados);
         setGraphTitle(" Dados do Sensor de Proximidade ");
+        break;
+      case "proximidade diaria":
+        setDados(proximidadeDiariaDados);
+        setGraphTitle(" Dados do Sensor de Proximidade por dia");
         break;
       case "pressao":
         setDados(pressaoDados);
@@ -498,6 +629,7 @@ function Home() {
   }, [
     nomeDados,
     proximidadeDados,
+    proximidadeDiariaDados,
     pressaoDados,
     umidadeDados,
     temperaturaDados,
@@ -540,6 +672,13 @@ function Home() {
               onClick={() => handleDataChange(proximidadeDados, "proximidade")}
             >
               Dados do Sensor de Proximidade
+            </button>
+            <button
+              onClick={() =>
+                handleDataChange(proximidadeDiariaDados, "proximidade diaria")
+              }
+            >
+              Dados do Sensor de Proximidade por dia
             </button>
             <button onClick={() => handleDataChange(pressaoDados, "pressao")}>
               Dados de Pressão
@@ -591,6 +730,7 @@ function Home() {
         </div>
 
         {!showAll &&
+          dados !== proximidadeDiariaDados &&
           dados !== poluicaoAirQDados &&
           dados !== poluicaoCompDados &&
           dados !== proximidadeDados && (
@@ -600,12 +740,13 @@ function Home() {
             </div>
           )}
 
-        {!showAll && dados == proximidadeDados && (
-          <div className="chart-container">
-            <h3>{graphTitle}</h3>
-            <GraficoCombinado data={dados} />
-          </div>
-        )}
+        {!showAll &&
+          (dados === proximidadeDados || dados === proximidadeDiariaDados) && (
+            <div className="chart-container">
+              <h3>{graphTitle}</h3>
+              <GraficoCombinado data={dados} />
+            </div>
+          )}
 
         {!showAll &&
           dados === poluicaoAirQDados &&
@@ -639,6 +780,10 @@ function Home() {
             <div className="chart-container">
               <h3> Dados do Sensor de Proximidade </h3>
               <GraficoCombinado data={proximidadeDados} />
+            </div>
+            <div className="chart-container">
+              <h3> Dados do Sensor de Proximidade por dia </h3>
+              <GraficoCombinado data={proximidadeDiariaDados} />
             </div>
             <div className="chart-container">
               <h3> Dados de Pressão (hPa) </h3>
