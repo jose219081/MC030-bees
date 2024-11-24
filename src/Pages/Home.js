@@ -304,8 +304,8 @@ function Home() {
             pressaoRsp: parseFloat(values[key].sensor.pressao_interna).toFixed(
               2
             ),
-            poluicaoAirQApi: values[key].pollution?.list[0].main?.aqi,
-            poluicaoCompAPI: values[key].pollution?.list[0].components,
+            poluicaoAirQApi: values[key].openweathermap.pollution?.list[0].main?.aqi,
+            poluicaoCompAPI: values[key].openweathermap.pollution?.list[0].components,
           });
         }
       }
@@ -654,8 +654,8 @@ function Home() {
           ).toFixed(2),
           umidadeRsp: parseFloat(values[key].sensor.umidade_interna).toFixed(2),
           pressaoRsp: parseFloat(values[key].sensor.pressao_interna).toFixed(2),
-          poluicaoAirQApi: values[key].pollution?.list[0].main?.aqi,
-          poluicaoCompAPI: values[key].pollution?.list[0].components,
+          poluicaoAirQApi: values[key].openweathermap.pollution?.list[0].main?.aqi,
+          poluicaoCompAPI: values[key].openweathermap.pollution?.list[0].components,
         });
       }
 
